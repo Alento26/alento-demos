@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>See Your AI Assistant in Action — Vox Restoration</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--dark:#2b241d;--ember:#c0511a;--sand:#e8d9c4;--ash:#7a6f67;--white:#faf7f4;--accent:#e07034}
+  body{font-family:'Plus Jakarta Sans',sans-serif;background:#000;overflow-x:hidden}
+
+  /* ── SITE WRAPPER ── */
+  #site-wrapper{position:relative;width:100%;height:100vh;overflow:hidden}
+
+  /* ── IFRAME ── */
+  #vox-iframe{
+    width:100%;height:100vh;border:none;
+    display:block;
+  }
+
+  /* ── LINK BLOCKER (transparent overlay stops iframe clicks/navigation) ── */
+  #link-blocker{
+    position:absolute;inset:0;z-index:10;
+    background:transparent;
+    pointer-events:none;
+  }
+
+  /* ── TOP BANNER ── */
+  #demo-banner{
+    position:fixed;top:0;left:0;right:0;z-index:200;
+    background:linear-gradient(135deg,var(--dark) 0%,#3d2f24 100%);
+    border-bottom:2px solid var(--ember);
+    padding:10px 24px;
+    display:flex;align-items:center;justify-content:space-between;
+    gap:16px;
+    box-shadow:0 4px 24px rgba(0,0,0,0.4);
+  }
+  #demo-banner .banner-left{display:flex;align-items:center;gap:12px}
+  #demo-banner .pulse{
+    width:10px;height:10px;border-radius:50%;background:#4ade80;flex-shrink:0;
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,0.4)}50%{box-shadow:0 0 0 6px rgba(74,222,128,0)}}
+  #demo-banner .banner-text{color:var(--white);font-size:.82rem;font-weight:600;line-height:1.4}
+  #demo-banner .banner-text span{color:var(--accent)}
+  #demo-banner .banner-steps{display:flex;align-items:center;gap:8px}
+  .step-pill{
+    background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);
+    color:rgba(255,255,255,0.5);font-size:.72rem;font-weight:700;
+    padding:4px 12px;border-radius:20px;white-space:nowrap;
+    transition:all 0.3s;
+  }
+  .step-pill.active{background:var(--ember);border-color:var(--ember);color:#fff}
+  .step-pill.done{background:rgba(74,222,128,0.2);border-color:#4ade80;color:#4ade80}
+  .step-arrow{color:rgba(255,255,255,0.3);font-size:.7rem}
+
+  /* ── WIDGET DOCK ── */
+  #widget-dock{
+    position:fixed;bottom:28px;right:28px;z-index:500;
+    display:flex;flex-direction:column;align-items:flex-end;gap:12px;
+  }
+
+  /* ── AVA BUBBLE ── */
+  #ava-bubble{
+    background:linear-gradient(135deg,var(--dark),#3d2f24);
+    border:1.5px solid var(--ember);
+    border-radius:16px;
+    padding:14px 18px;
+    max-width:300px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.5);
+    animation:slideUp 0.5s ease forwards;
+    cursor:pointer;
+  }
+  @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  #ava-bubble .ava-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  #ava-bubble .ava-avatar{
+    width:36px;height:36px;border-radius:50%;
+    background:var(--ember);color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:.85rem;flex-shrink:0;
+  }
+  #ava-bubble .ava-name{color:var(--white);font-weight:700;font-size:.85rem}
+  #ava-bubble .ava-role{color:var(--accent);font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+  #ava-bubble .ava-msg{color:var(--sand);font-size:.82rem;line-height:1.55}
+  #ava-bubble .ava-cta{
+    margin-top:10px;display:inline-flex;align-items:center;gap:6px;
+    background:var(--ember);color:#fff;
+    padding:7px 14px;border-radius:8px;
+    font-size:.78rem;font-weight:700;
+    border:none;cursor:pointer;width:100%;justify-content:center;
+    transition:background 0.2s;
+  }
+  #ava-bubble .ava-cta:hover{background:#a8401a}
+
+  /* ── AVA WIDGET CONTAINER ── */
+  #ava-widget-wrap{display:none}
+
+  /* ── MARIA WIDGET ── */
+  #maria-wrap{display:none}
+  #maria-intro{
+    background:linear-gradient(135deg,var(--dark),#3d2f24);
+    border:1.5px solid #4ade80;
+    border-radius:16px;
+    padding:14px 18px;
+    max-width:300px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.5);
+    animation:slideUp 0.5s ease forwards;
+    margin-bottom:8px;
+  }
+  #maria-intro .maria-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  #maria-intro .maria-avatar{
+    width:36px;height:36px;border-radius:50%;
+    background:#4ade80;color:var(--dark);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:.85rem;flex-shrink:0;
+  }
+  #maria-intro .maria-name{color:var(--white);font-weight:700;font-size:.85rem}
+  #maria-intro .maria-role{color:#4ade80;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+  #maria-intro .maria-msg{color:var(--sand);font-size:.82rem;line-height:1.55}
+  
+  #maria-intro .maria-cta {
+    margin-top:12px;display:inline-flex;align-items:center;gap:6px;
+    background:#4ade80;color:var(--dark);
+    padding:9px 14px;border-radius:8px;
+    font-size:.85rem;font-weight:800;text-decoration:none;
+    border:none;cursor:pointer;width:100%;justify-content:center;
+    transition:background 0.2s;
+  }
+  #maria-intro .maria-cta:hover{background:#22c55e}
+
+  /* ── SCROLL HINT ── */
+  #scroll-hint{
+    position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+    z-index:300;
+    background:rgba(43,36,29,0.9);border:1px solid rgba(255,255,255,0.1);
+    backdrop-filter:blur(8px);
+    color:var(--sand);font-size:.78rem;font-weight:600;
+    padding:8px 20px;border-radius:30px;
+    display:flex;align-items:center;gap:8px;
+    animation:fadeInUp 1s ease 2s both;
+    pointer-events:none;
+  }
+  @keyframes fadeInUp{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+
+  /* ── IFRAME TOP MARGIN (for banner) ── */
+  #vox-iframe{margin-top:52px;height:calc(100vh - 52px)}
+</style>
+</head>
+<body>
+
+<!-- ══ BANNER ══ -->
+<div id="demo-banner">
+  <div class="banner-left">
+    <div class="pulse"></div>
+    <div class="banner-text">
+      You're viewing a <span>live AI demo</span> built for Vox Restoration & Construction
+    </div>
+  </div>
+  <div class="banner-steps">
+    <div class="step-pill active" id="step1">① Talk to Ava</div>
+    <div class="step-arrow">→</div>
+    <div class="step-pill" id="step2">② Chat with Maria</div>
+    <div class="step-arrow">→</div>
+    <div class="step-pill" id="step3">③ Book a Call</div>
+  </div>
+</div>
+
+<!-- ══ SITE WRAPPER ══ -->
+<div id="site-wrapper">
+  <iframe
+    id="vox-iframe"
+    src="https://www.voxbuilt.com"
+    scrolling="yes"
+    sandbox="allow-scripts allow-same-origin"
+    loading="eager"
+  ></iframe>
+  <div id="link-blocker"></div>
+</div>
+
+<!-- ══ SCROLL HINT ══ -->
+<div id="scroll-hint">↕ Scroll to explore their site — the widget stays with you</div>
+
+<!-- ══ WIDGET DOCK ══ -->
+<div id="widget-dock">
+
+  <!-- AVA INTRO BUBBLE -->
+  <div id="ava-bubble">
+    <div class="ava-header">
+      <div class="ava-avatar">AVA</div>
+      <div>
+        <div class="ava-name">Ava — AI Voice Assistant</div>
+        <div class="ava-role">Step 1 of 2 · Start here</div>
+      </div>
+    </div>
+    <div class="ava-msg">
+      👋 Hi! I'm Ava — the AI assistant that would live on this website.<br><br>
+      Talk to me like you're a homeowner who just had water damage. See exactly how I'd handle your customers.
+    </div>
+    <button class="ava-cta" onclick="launchAva()">
+      🎙️ Start the Voice Demo
+    </button>
+  </div>
+
+  <!-- AVA WIDGET (loads after click) -->
+  <div id="ava-widget-wrap"></div>
+
+  <!-- MARIA SECTION (appears after Ava) -->
+  <div id="maria-wrap">
+    <div id="maria-intro">
+      <div class="maria-header">
+        <div class="maria-avatar">M</div>
+        <div>
+          <div class="maria-name">Maria — Sales Assistant</div>
+          <div class="maria-role">Step 2 of 2 · Questions? Ask me</div>
+        </div>
+      </div>
+      <div class="maria-msg">
+        Nice work! 👏<br><br>
+        That's exactly what Ava would do for every visitor on this site, 24/7.<br><br>
+        I'm Maria — ask me anything about getting this live on your business, or use the link below to jump straight to my calendar.
+      </div>
+      <a href="https://links.alentopro.com/widget/booking/rDHlGGSGhr0oXGdc5sPj" target="_blank" class="maria-cta">
+        📅 Book Your Strategy Call
+      </a>
+    </div>
+    <!-- MARIA EMBED -->
+    <script src="https://widgets.leadconnectorhq.com/loader.js" data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js" data-widget-id="6a522abda8bb19326141636f"></script>
+  </div>
+
+</div>
+
+<!-- ══ AVA EMBED (injected on click) ══ -->
+<script>
+  let avaLaunched = false;
+  let mariaShown = false;
+
+  function launchAva() {
+    if (avaLaunched) return;
+    avaLaunched = true;
+
+    // Hide intro bubble
+    document.getElementById('ava-bubble').style.display = 'none';
+
+    // Inject Ava widget script
+    const wrap = document.getElementById('ava-widget-wrap');
+    wrap.style.display = 'block';
+    const s = document.createElement('script');
+    s.src = 'https://widgets.leadconnectorhq.com/loader.js';
+    s.setAttribute('data-resources-url','https://widgets.leadconnectorhq.com/chat-widget/loader.js');
+    s.setAttribute('data-widget-id','6a523005c9f31412b259a964');
+    wrap.appendChild(s);
+
+    // Update step pill
+    document.getElementById('step1').classList.add('done');
+    document.getElementById('step1').classList.remove('active');
+    document.getElementById('step2').classList.add('active');
+
+    // Show Maria after 90 seconds or on widget close — whichever comes first
+    setTimeout(showMaria, 90000);
+
+    // Also watch for any widget close event
+    window.addEventListener('message', function(e) {
+      if (e.data && (e.data.type === 'widget-closed' || e.data.action === 'close')) {
+        showMaria();
+      }
+    });
+  }
+
+  function showMaria() {
+    if (mariaShown) return;
+    mariaShown = true;
+
+    document.getElementById('maria-wrap').style.display = 'block';
+
+    // Update step pills
+    document.getElementById('step2').classList.add('done');
+    document.getElementById('step2').classList.remove('active');
+    document.getElementById('step3').classList.add('active');
+
+    // Smooth scroll hint to Maria
+    document.getElementById('maria-wrap').scrollIntoView({behavior:'smooth', block:'end'});
+  }
+
+  // Hide scroll hint after 6 seconds
+  setTimeout(() => {
+    const hint = document.getElementById('scroll-hint');
+    if (hint) hint.style.opacity = '0';
+    hint.style.transition = 'opacity 1s';
+  }, 6000);
+</script>
+
+</body>
+</html>
