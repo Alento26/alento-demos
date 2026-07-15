@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>See Your AI Assistant in Action</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--dark:#2b241d;--ember:#c0511a;--sand:#e8d9c4;--ash:#7a6f67;--white:#faf7f4;--accent:#e07034}
+  body{font-family:'Plus Jakarta Sans',sans-serif;background:#000;overflow-x:hidden}
+  #site-wrapper{position:relative;width:100%;height:100vh;overflow:hidden}
+  #demo-iframe{width:100%;border:none;display:block;margin-top:52px;height:calc(100vh - 52px)}
+  #link-blocker{position:absolute;inset:0;z-index:10;background:transparent;pointer-events:none}
+  #demo-banner{position:fixed;top:0;left:0;right:0;z-index:200;background:linear-gradient(135deg,var(--dark) 0%,#3d2f24 100%);border-bottom:2px solid var(--ember);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;box-shadow:0 4px 24px rgba(0,0,0,0.4)}
+  #demo-banner .banner-left{display:flex;align-items:center;gap:12px}
+  #demo-banner .pulse{width:10px;height:10px;border-radius:50%;background:#4ade80;flex-shrink:0;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,0.4)}50%{box-shadow:0 0 0 6px rgba(74,222,128,0)}}
+  #demo-banner .banner-text{color:var(--white);font-size:.82rem;font-weight:600;line-height:1.4}
+  #demo-banner .banner-text span{color:var(--accent)}
+  #demo-banner .banner-steps{display:flex;align-items:center;gap:8px}
+  .step-pill{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);font-size:.72rem;font-weight:700;padding:4px 12px;border-radius:20px;white-space:nowrap;transition:all 0.3s}
+  .step-pill.active{background:var(--ember);border-color:var(--ember);color:#fff}
+  .step-pill.done{background:rgba(74,222,128,0.2);border-color:#4ade80;color:#4ade80}
+  .step-arrow{color:rgba(255,255,255,0.3);font-size:.7rem}
+  #intro-overlay{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;padding:24px;cursor:pointer}
+  #intro-box{background:linear-gradient(135deg,#1a1209,#2b1f14);border:1.5px solid var(--ember);border-radius:20px;padding:32px 28px;max-width:460px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,0.7);animation:popIn 0.4s ease forwards;position:relative}
+  @keyframes popIn{from{opacity:0;transform:scale(0.92)}to{opacity:1;transform:scale(1)}}
+  #intro-box .intro-close{position:absolute;top:14px;right:16px;color:rgba(255,255,255,0.4);font-size:1.1rem;cursor:pointer;background:none;border:none;line-height:1}
+  #intro-box h2{color:var(--white);font-size:1.35rem;font-weight:800;line-height:1.3;margin-bottom:6px}
+  #intro-box h2 span{color:var(--accent)}
+  #intro-box .intro-sub{color:var(--sand);font-size:.82rem;margin-bottom:20px;line-height:1.5}
+  #intro-box .intro-steps{list-style:none;margin-bottom:22px}
+  #intro-box .intro-steps li{display:flex;align-items:flex-start;gap:10px;color:var(--sand);font-size:.83rem;line-height:1.5;margin-bottom:10px}
+  #intro-box .intro-steps li .num{background:var(--ember);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;flex-shrink:0;margin-top:1px}
+  #intro-box .intro-tap{text-align:center;color:rgba(255,255,255,0.5);font-size:.75rem;font-weight:600;border-top:1px solid rgba(255,255,255,0.08);padding-top:14px;line-height:1.6}
+  #intro-box .intro-tap strong{color:var(--white)}
+  #step-overlay{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:550;background:linear-gradient(135deg,#1a1209,#2b1f14);border:1.5px solid var(--accent);border-radius:18px;padding:28px 26px;max-width:420px;width:90%;box-shadow:0 20px 50px rgba(0,0,0,0.7);display:none;text-align:center;animation:popIn 0.4s ease forwards}
+  #step-overlay .so-tag{display:inline-block;background:var(--ember);color:#fff;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:3px 12px;border-radius:20px;margin-bottom:12px}
+  #step-overlay h3{color:var(--white);font-size:1.2rem;font-weight:800;line-height:1.35;margin-bottom:10px}
+  #step-overlay h3 span{color:var(--accent)}
+  #step-overlay p{color:var(--sand);font-size:.82rem;line-height:1.6;margin-bottom:8px}
+  #step-overlay .so-arrow{display:block;margin:10px auto 0;font-size:2rem;color:var(--accent);animation:arrowPulse 1.2s infinite}
+  @keyframes arrowPulse{0%,100%{transform:translateX(0)}50%{transform:translateX(-8px)}}
+  #step-overlay .so-dismiss{margin-top:16px;display:inline-block;color:rgba(255,255,255,0.35);font-size:.72rem;cursor:pointer;border:none;background:none}
+  #ava-dock{position:fixed;bottom:28px;right:28px;z-index:500;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+  #ava-bubble{background:linear-gradient(135deg,var(--dark),#3d2f24);border:1.5px solid var(--ember);border-radius:16px;padding:14px 18px;max-width:300px;box-shadow:0 8px 32px rgba(0,0,0,0.5);animation:slideUp 0.5s ease forwards;cursor:pointer}
+  @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  #ava-bubble .ava-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  #ava-bubble .ava-avatar{width:36px;height:36px;border-radius:50%;background:var(--ember);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;flex-shrink:0}
+  #ava-bubble .ava-name{color:var(--white);font-weight:700;font-size:.85rem}
+  #ava-bubble .ava-role{color:var(--accent);font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+  #ava-bubble .ava-msg{color:var(--sand);font-size:.82rem;line-height:1.55}
+  #ava-bubble .ava-cta{margin-top:10px;display:inline-flex;align-items:center;gap:6px;background:var(--ember);color:#fff;padding:7px 14px;border-radius:8px;font-size:.78rem;font-weight:700;border:none;cursor:pointer;width:100%;justify-content:center;transition:background 0.2s}
+  #ava-bubble .ava-cta:hover{background:#a8401a}
+  #ava-widget-wrap{display:none}
+  #maria-dock{position:fixed;bottom:28px;left:28px;z-index:500;display:none;flex-direction:column;align-items:flex-start;gap:12px}
+  #maria-widget-wrap{min-width:60px}
+  #scroll-hint{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:300;background:rgba(43,36,29,0.9);border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(8px);color:var(--sand);font-size:.78rem;font-weight:600;padding:8px 20px;border-radius:30px;display:flex;align-items:center;gap:8px;animation:fadeInUp 1s ease 2s both;pointer-events:none}
+  @keyframes fadeInUp{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+</style>
+</head>
+<body>
+<div id="intro-overlay" onclick="dismissIntro()">
+  <div id="intro-box">
+    <button class="intro-close" onclick="dismissIntro()">✕</button>
+    <h2>Still losing urgent leads<br>who <span>never call or book?</span></h2>
+    <p class="intro-sub">Watch what happens when a visitor needs help — right here, right now.</p>
+    <ul class="intro-steps">
+      <li><span class="num">1</span><span>Visitor asks about a problem or service</span></li>
+      <li><span class="num">2</span><span>AI responds instantly — like a real team member</span></li>
+      <li><span class="num">3</span><span>AI offers to schedule or request a callback</span></li>
+      <li><span class="num">4</span><span>Contact is created and follow-up is triggered</span></li>
+      <li><span class="num">5</span><span>Lead captured handsfree. 24/7.</span></li>
+    </ul>
+    <div class="intro-tap"><strong>Tap or click anywhere to start the demo.</strong><br>You'll be guided step by step.</div>
+  </div>
+</div>
+<div id="step-overlay">
+  <div class="so-tag">Step 2</div>
+  <h3>Now use the real agent on the <span>left side</span> of the screen.</h3>
+  <p>You just experienced how AI captures a lead automatically.</p>
+  <p>Click the chat agent on the left to take the next step.</p>
+  <span class="so-arrow">←</span>
+  <button class="so-dismiss" onclick="dismissStepOverlay()">Got it — dismiss</button>
+</div>
+<div id="demo-banner">
+  <div class="banner-left">
+    <div class="pulse"></div>
+    <div class="banner-text">You're viewing a <span>live AI demo</span> built specifically for your business</div>
+  </div>
+  <div class="banner-steps">
+    <div class="step-pill active" id="step1">① Talk to Ava</div>
+    <div class="step-arrow">→</div>
+    <div class="step-pill" id="step2">② Chat with Maria</div>
+    <div class="step-arrow">→</div>
+    <div class="step-pill" id="step3">③ Book a Call</div>
+  </div>
+</div>
+<div id="site-wrapper">
+  <iframe id="demo-iframe" src="REG_TARGET_URL" scrolling="yes" sandbox="allow-scripts allow-same-origin" loading="eager"></iframe>
+  <div id="link-blocker"></div>
+</div>
+<div id="scroll-hint">↕ Scroll to explore the site — the widgets stay with you</div>
+<div id="ava-dock">
+  <div id="ava-bubble">
+    <div class="ava-header">
+      <div class="ava-avatar">AVA</div>
+      <div>
+        <div class="ava-name">Ava — AI Voice Assistant</div>
+        <div class="ava-role">Step 1 of 2 · Start here</div>
+      </div>
+    </div>
+    <div class="ava-msg">👋 Hi! I'm Ava — the AI assistant that would live on this website.<br><br>Talk to me like you're a customer with an urgent need. See exactly how I'd handle your leads.</div>
+    <button class="ava-cta" onclick="launchAva()">🎙️ Start the Voice Demo</button>
+  </div>
+  <div id="ava-widget-wrap"></div>
+</div>
+<div id="maria-dock">
+  <div id="maria-widget-wrap"></div>
+</div>
+<script>
+  let avaLaunched = false;
+  let mariaShown = false;
+  function dismissIntro() {
+    const overlay = document.getElementById('intro-overlay');
+    overlay.style.opacity = '0';
+    overlay.style.transition = 'opacity 0.3s';
+    setTimeout(() => overlay.style.display = 'none', 300);
+  }
+  function launchAva() {
+    if (avaLaunched) return;
+    avaLaunched = true;
+    document.getElementById('ava-bubble').style.display = 'none';
+    const wrap = document.getElementById('ava-widget-wrap');
+    wrap.style.display = 'block';
+    const s = document.createElement('script');
+    s.src = 'https://widgets.leadconnectorhq.com/loader.js';
+    s.setAttribute('data-resources-url','https://widgets.leadconnectorhq.com/chat-widget/loader.js');
+    s.setAttribute('data-widget-id','6a523005c9f31412b259a964');
+    wrap.appendChild(s);
+    document.getElementById('step1').classList.add('done');
+    document.getElementById('step1').classList.remove('active');
+    document.getElementById('step2').classList.add('active');
+    setTimeout(showMaria, 90000);
+    window.addEventListener('message', function(e) {
+      if (e.data && (e.data.type === 'widget-closed' || e.data.action === 'close')) { showMaria(); }
+    });
+  }
+  function showMaria() {
+    if (mariaShown) return;
+    mariaShown = true;
+    const mariaDock = document.getElementById('maria-dock');
+    mariaDock.style.display = 'flex';
+    const mWrap = document.getElementById('maria-widget-wrap');
+    const ms = document.createElement('script');
+    ms.src = 'https://widgets.leadconnectorhq.com/loader.js';
+    ms.setAttribute('data-resources-url','https://widgets.leadconnectorhq.com/chat-widget/loader.js');
+    ms.setAttribute('data-widget-id','6a522abda8bb19326141636f');
+    mWrap.appendChild(ms);
+    document.getElementById('step2').classList.add('done');
+    document.getElementById('step2').classList.remove('active');
+    document.getElementById('step3').classList.add('active');
+    document.getElementById('step-overlay').style.display = 'block';
+  }
+  function dismissStepOverlay() {
+    document.getElementById('step-overlay').style.display = 'none';
+  }
+  setTimeout(() => {
+    const hint = document.getElementById('scroll-hint');
+    if (hint) { hint.style.transition = 'opacity 1s'; hint.style.opacity = '0'; }
+  }, 6000);
+</script>
+</body>
+</html>
