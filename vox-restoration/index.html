@@ -56,19 +56,19 @@
   #ava-next-btn{margin-top:8px;display:none;width:100%;padding:7px 14px;border-radius:8px;font-size:.78rem;font-weight:700;border:1.5px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer;transition:all 0.2s}
   #ava-next-btn:hover{background:var(--accent);color:#fff}
   #ava-widget-wrap{display:none}
-  #maria-dock{position:fixed;bottom:28px;left:28px;z-index:500;display:none;flex-direction:column;align-items:flex-start;gap:12px}
-  #maria-widget-wrap{min-width:60px}
+  #sophie-dock{position:fixed;bottom:28px;left:28px;z-index:500;display:none;flex-direction:column;align-items:flex-start;gap:12px}
+  #sophie-widget-wrap{min-width:60px}
 </style>
 </head>
 <body>
 <div id="intro-overlay" onclick="dismissIntro()">
   <div id="intro-box" onclick="event.stopPropagation()">
-    <button class="intro-close" onclick="dismissIntro()">✕</button>
+    <button class="intro-close" onclick="dismissIntro()">&#x2715;</button>
     <h2>Still losing urgent leads<br>who <span>never call or book?</span></h2>
-    <p class="intro-sub">Watch what happens when a visitor needs help — right here, right now.</p>
+    <p class="intro-sub">Watch what happens when a visitor needs help &#8212; right here, right now.</p>
     <ul class="intro-steps">
       <li><span class="num">1</span><span>Visitor asks about a problem or service</span></li>
-      <li><span class="num">2</span><span>AI responds instantly — like a real team member</span></li>
+      <li><span class="num">2</span><span>AI responds instantly &#8212; like a real team member</span></li>
       <li><span class="num">3</span><span>AI offers to schedule or request a callback</span></li>
       <li><span class="num">4</span><span>Contact is created and follow-up is triggered</span></li>
       <li><span class="num">5</span><span>Lead captured handsfree. 24/7.</span></li>
@@ -78,11 +78,11 @@
 </div>
 <div id="step-overlay">
   <div class="so-tag">Step 2</div>
-  <h3>Now chat with the agent on the <span>left side</span> of the screen.</h3>
+  <h3>Now talk to the agent on the <span>left side</span> of the screen.</h3>
   <p>You just experienced how AI captures a lead automatically.</p>
-  <p>Maria is now live on the bottom-left — click her to continue.</p>
-  <span class="so-arrow">←</span>
-  <button class="so-dismiss" onclick="dismissStepOverlay()">Got it — dismiss</button>
+  <p>Sophie is now live on the bottom-left &#8212; click her to continue.</p>
+  <span class="so-arrow">&#8592;</span>
+  <button class="so-dismiss" onclick="dismissStepOverlay()">Got it &#8212; dismiss</button>
 </div>
 <div id="demo-banner">
   <div class="banner-left">
@@ -90,11 +90,11 @@
     <div class="banner-text">You're viewing a <span>live AI demo</span> built specifically for your business</div>
   </div>
   <div class="banner-steps">
-    <div class="step-pill active" id="step1">① Talk to Ava</div>
-    <div class="step-arrow">→</div>
-    <div class="step-pill" id="step2">② Chat with Maria</div>
-    <div class="step-arrow">→</div>
-    <div class="step-pill" id="step3">③ Book a Call</div>
+    <div class="step-pill active" id="step1">&#9312; Talk to Ava</div>
+    <div class="step-arrow">&#8594;</div>
+    <div class="step-pill" id="step2">&#9313; Talk to Sophie</div>
+    <div class="step-arrow">&#8594;</div>
+    <div class="step-pill" id="step3">&#9314; Book a Call</div>
   </div>
 </div>
 <div id="site-wrapper">
@@ -106,22 +106,22 @@
     <div class="ava-header">
       <div class="ava-avatar">AVA</div>
       <div>
-        <div class="ava-name">Ava — AI Voice Assistant</div>
-        <div class="ava-role">Step 1 of 2 · Start here</div>
+        <div class="ava-name">Ava &#8212; AI Voice Assistant</div>
+        <div class="ava-role">Step 1 of 2 &middot; Start here</div>
       </div>
     </div>
-    <div class="ava-msg">👋 Hi! I'm Ava — the AI assistant that would live on this website.<br><br>Talk to me like you're a customer with an urgent need. See exactly how I'd handle your leads.</div>
-    <button class="ava-cta" onclick="launchAva()">🎙️ Start the Voice Demo</button>
-    <button id="ava-next-btn" onclick="showMaria()">💬 Done talking? Meet Maria →</button>
+    <div class="ava-msg">&#128075; Hi! I'm Ava &#8212; the AI assistant that would live on this website.<br><br>Talk to me like you're a customer with an urgent need. See exactly how I'd handle your leads.</div>
+    <button class="ava-cta" onclick="launchAva()">&#127897;&#65039; Start the Voice Demo</button>
+    <button id="ava-next-btn" onclick="showSophie()">&#127897;&#65039; Done talking? Meet Sophie &#8594;</button>
   </div>
   <div id="ava-widget-wrap"></div>
 </div>
-<div id="maria-dock">
-  <div id="maria-widget-wrap"></div>
+<div id="sophie-dock">
+  <div id="sophie-widget-wrap"></div>
 </div>
 <script>
   let avaLaunched = false;
-  let mariaShown = false;
+  let sophieShown = false;
   function dismissIntro() {
     const overlay = document.getElementById('intro-overlay');
     overlay.style.opacity = '0';
@@ -145,22 +145,22 @@
     setTimeout(() => {
       document.getElementById('ava-next-btn').style.display = 'block';
     }, 15000);
-    setTimeout(showMaria, 120000);
+    setTimeout(showSophie, 120000);
     window.addEventListener('message', function(e) {
-      if (e.data && (e.data.type === 'widget-closed' || e.data.action === 'close')) { showMaria(); }
+      if (e.data && (e.data.type === 'widget-closed' || e.data.action === 'close')) { showSophie(); }
     });
   }
-  function showMaria() {
-    if (mariaShown) return;
-    mariaShown = true;
+  function showSophie() {
+    if (sophieShown) return;
+    sophieShown = true;
     document.getElementById('ava-next-btn').style.display = 'none';
-    const mariaDock = document.getElementById('maria-dock');
-    mariaDock.style.display = 'flex';
-    const mWrap = document.getElementById('maria-widget-wrap');
+    const sophieDock = document.getElementById('sophie-dock');
+    sophieDock.style.display = 'flex';
+    const mWrap = document.getElementById('sophie-widget-wrap');
     const ms = document.createElement('script');
     ms.src = 'https://widgets.leadconnectorhq.com/loader.js';
     ms.setAttribute('data-resources-url','https://widgets.leadconnectorhq.com/chat-widget/loader.js');
-    ms.setAttribute('data-widget-id','6a522abda8bb19326141636f');
+    ms.setAttribute('data-widget-id','6a5848c1c02522215acf73d9');
     mWrap.appendChild(ms);
     document.getElementById('step2').classList.add('done');
     document.getElementById('step2').classList.remove('active');
