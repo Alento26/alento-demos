@@ -80,40 +80,42 @@
   }
   #sophie-box .sm-cta:hover{background:#a8401a;transform:translateY(-2px)}
 
-  /* SOPHIE POINTER — anchored bottom-left, slides left toward widget */
+  /* SOPHIE POINTER — starts center-bottom, diagonal arrow pointing ↙ toward Sophie widget */
   #sophie-pointer{
     position:fixed;
-    bottom:48px;
-    left:110px;
+    bottom:160px;
+    left:50%;
+    transform:translateX(-50%);
     z-index:800;
     display:none;
+    flex-direction:column;
     align-items:center;
     gap:8px;
     pointer-events:none;
-    animation:pointerSlide 0.7s ease infinite alternate
+    opacity:1
   }
-  #sophie-pointer.show{display:flex}
-  @keyframes pointerSlide{from{transform:translateX(0)}to{transform:translateX(-12px)}}
-  #sophie-pointer .ptr-arrow{
-    font-size:2.8rem;
-    color:var(--accent);
-    line-height:1;
-    filter:drop-shadow(0 0 10px rgba(224,112,52,0.85))
-  }
+  #sophie-pointer.show{display:flex;animation:ptrDrift 1s ease infinite alternate}
+  @keyframes ptrDrift{from{transform:translateX(-50%) translate(0,0)}to{transform:translateX(-50%) translate(-10px,8px)}}
   #sophie-pointer .ptr-label{
     background:var(--ember);
     color:#fff;
-    font-size:.74rem;
+    font-size:.76rem;
     font-weight:800;
-    padding:5px 14px;
+    padding:5px 16px;
     border-radius:20px;
     white-space:nowrap;
     letter-spacing:.07em;
     text-transform:uppercase;
-    box-shadow:0 4px 16px rgba(192,81,26,0.5)
+    box-shadow:0 4px 16px rgba(192,81,26,0.55)
+  }
+  #sophie-pointer .ptr-arrow{
+    font-size:3.2rem;
+    color:var(--accent);
+    line-height:1;
+    filter:drop-shadow(0 0 12px rgba(224,112,52,0.9))
   }
 
-  /* AVA DOCK — ember glow on bubble */
+  /* AVA DOCK — pulsing gold glow */
   #ava-dock{position:fixed;bottom:28px;right:28px;z-index:500;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
   #ava-bubble{
     background:linear-gradient(135deg,var(--dark),#3d2f24);
@@ -121,10 +123,24 @@
     border-radius:16px;
     padding:14px 18px;
     max-width:300px;
-    box-shadow:0 8px 32px rgba(0,0,0,0.5),0 0 40px rgba(192,81,26,0.45),0 0 80px rgba(192,81,26,0.2);
-    animation:slideUp 0.5s ease forwards
+    animation:slideUp 0.5s ease forwards, avaGlow 2.2s ease-in-out infinite;
   }
   @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes avaGlow{
+    0%,100%{
+      box-shadow:
+        0 8px 32px rgba(0,0,0,0.5),
+        0 0 18px rgba(255,185,0,0.25),
+        0 0 45px rgba(255,160,0,0.1)
+    }
+    50%{
+      box-shadow:
+        0 8px 32px rgba(0,0,0,0.5),
+        0 0 40px rgba(255,200,0,0.65),
+        0 0 90px rgba(255,170,0,0.35),
+        0 0 130px rgba(255,140,0,0.15)
+    }
+  }
   #ava-bubble .ava-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
   #ava-bubble .ava-avatar{width:36px;height:36px;border-radius:50%;background:var(--ember);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;flex-shrink:0}
   #ava-bubble .ava-name{color:var(--white);font-weight:700;font-size:.85rem}
@@ -175,10 +191,10 @@
   </div>
 </div>
 
-<!-- SOPHIE POINTER ARROW -->
+<!-- SOPHIE POINTER: diagonal &#8601; from center toward bottom-left widget -->
 <div id="sophie-pointer">
-  <div class="ptr-arrow">&#8592;</div>
-  <div class="ptr-label">Talk to Sophie</div>
+  <div class="ptr-label">Sophie is live &#8212; bottom left &#8595;</div>
+  <div class="ptr-arrow">&#8601;</div>
 </div>
 
 <!-- BANNER -->
