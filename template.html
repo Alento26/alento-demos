@@ -23,6 +23,8 @@
   .step-pill.active{background:var(--ember);border-color:var(--ember);color:#fff}
   .step-pill.done{background:rgba(74,222,128,0.2);border-color:#4ade80;color:#4ade80}
   .step-arrow{color:rgba(255,255,255,0.3);font-size:.7rem}
+
+  /* INTRO OVERLAY */
   #intro-overlay{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;padding:24px;cursor:pointer}
   #intro-box{background:linear-gradient(135deg,#1a1209,#2b1f14);border:1.5px solid var(--ember);border-radius:20px;padding:32px 28px;max-width:460px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,0.7);animation:popIn 0.4s ease forwards;position:relative;cursor:default}
   @keyframes popIn{from{opacity:0;transform:scale(0.92)}to{opacity:1;transform:scale(1)}}
@@ -35,14 +37,28 @@
   #intro-box .intro-steps li .num{background:var(--ember);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;flex-shrink:0;margin-top:1px}
   #intro-box .intro-tap{text-align:center;color:rgba(255,255,255,0.5);font-size:.75rem;font-weight:600;border-top:1px solid rgba(255,255,255,0.08);padding-top:14px;line-height:1.6}
   #intro-box .intro-tap strong{color:var(--white)}
-  #step-overlay{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:550;background:linear-gradient(135deg,#1a1209,#2b1f14);border:1.5px solid var(--accent);border-radius:18px;padding:28px 26px;max-width:420px;width:90%;box-shadow:0 20px 50px rgba(0,0,0,0.7);display:none;text-align:center;animation:popIn 0.4s ease forwards}
-  #step-overlay .so-tag{display:inline-block;background:var(--ember);color:#fff;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:3px 12px;border-radius:20px;margin-bottom:12px}
-  #step-overlay h3{color:var(--white);font-size:1.2rem;font-weight:800;line-height:1.35;margin-bottom:10px}
-  #step-overlay h3 span{color:var(--accent)}
-  #step-overlay p{color:var(--sand);font-size:.82rem;line-height:1.6;margin-bottom:8px}
-  #step-overlay .so-arrow{display:block;margin:10px auto 0;font-size:2rem;color:var(--accent);animation:arrowPulse 1.2s infinite}
-  @keyframes arrowPulse{0%,100%{transform:translateX(0)}50%{transform:translateX(-8px)}}
-  #step-overlay .so-dismiss{margin-top:16px;display:inline-block;color:rgba(255,255,255,0.35);font-size:.72rem;cursor:pointer;border:none;background:none}
+
+  /* SOPHIE TRANSITION MODAL */
+  #sophie-modal{position:fixed;inset:0;z-index:700;background:rgba(0,0,0,0.88);display:none;align-items:center;justify-content:center;padding:24px}
+  #sophie-modal.show{display:flex}
+  #sophie-box{background:linear-gradient(135deg,#1a1209,#2b1f14);border:2px solid var(--accent);border-radius:24px;padding:36px 32px;max-width:480px;width:100%;box-shadow:0 32px 80px rgba(0,0,0,0.8);animation:popIn 0.45s ease forwards;position:relative;text-align:center}
+  #sophie-box .sm-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(224,112,52,0.15);border:1px solid var(--accent);border-radius:30px;padding:6px 16px;margin-bottom:20px}
+  #sophie-box .sm-badge .sm-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite;flex-shrink:0}
+  #sophie-box .sm-badge span{color:var(--accent);font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+  #sophie-box h2{color:var(--white);font-size:1.55rem;font-weight:800;line-height:1.25;margin-bottom:10px}
+  #sophie-box h2 span{color:var(--accent)}
+  #sophie-box .sm-sub{color:var(--sand);font-size:.88rem;line-height:1.6;margin-bottom:28px}
+  #sophie-box .sm-cta{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--ember);color:#fff;font-size:1rem;font-weight:800;padding:16px 28px;border-radius:12px;border:none;cursor:pointer;width:100%;transition:background 0.2s;margin-bottom:12px}
+  #sophie-box .sm-cta:hover{background:#a8401a}
+  #sophie-box .sm-skip{color:rgba(255,255,255,0.3);font-size:.72rem;cursor:pointer;background:none;border:none;display:block;width:100%;text-align:center;padding:4px}
+  #sophie-box .sm-skip:hover{color:rgba(255,255,255,0.6)}
+  #sophie-box .sm-avatar-row{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:22px}
+  #sophie-box .sm-avatar{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;flex-shrink:0}
+  #sophie-box .sm-avatar.ava{background:var(--ember);color:#fff;opacity:0.5}
+  #sophie-box .sm-avatar.sophie{background:linear-gradient(135deg,var(--accent),#c0511a);color:#fff;box-shadow:0 0 0 3px rgba(224,112,52,0.4)}
+  #sophie-box .sm-arrow{font-size:1.6rem;color:var(--accent)}
+
+  /* AVA DOCK */
   #ava-dock{position:fixed;bottom:28px;right:28px;z-index:500;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
   #ava-bubble{background:linear-gradient(135deg,var(--dark),#3d2f24);border:1.5px solid var(--ember);border-radius:16px;padding:14px 18px;max-width:300px;box-shadow:0 8px 32px rgba(0,0,0,0.5);animation:slideUp 0.5s ease forwards}
   @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
@@ -56,11 +72,15 @@
   #ava-next-btn{margin-top:8px;display:none;width:100%;padding:7px 14px;border-radius:8px;font-size:.78rem;font-weight:700;border:1.5px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer;transition:all 0.2s}
   #ava-next-btn:hover{background:var(--accent);color:#fff}
   #ava-widget-wrap{display:none}
+
+  /* SOPHIE DOCK */
   #sophie-dock{position:fixed;bottom:28px;left:28px;z-index:500;display:none;flex-direction:column;align-items:flex-start;gap:12px}
   #sophie-widget-wrap{min-width:60px}
 </style>
 </head>
 <body>
+
+<!-- INTRO MODAL -->
 <div id="intro-overlay" onclick="dismissIntro()">
   <div id="intro-box" onclick="event.stopPropagation()">
     <button class="intro-close" onclick="dismissIntro()">&#x2715;</button>
@@ -76,14 +96,24 @@
     <div class="intro-tap"><strong>Tap or click anywhere to start the demo.</strong><br>You'll be guided step by step.</div>
   </div>
 </div>
-<div id="step-overlay">
-  <div class="so-tag">Step 2</div>
-  <h3>Now talk to the agent on the <span>left side</span> of the screen.</h3>
-  <p>You just experienced how AI captures a lead automatically.</p>
-  <p>Sophie is now live on the bottom-left &#8212; click her to continue.</p>
-  <span class="so-arrow">&#8592;</span>
-  <button class="so-dismiss" onclick="dismissStepOverlay()">Got it &#8212; dismiss</button>
+
+<!-- SOPHIE TRANSITION MODAL -->
+<div id="sophie-modal">
+  <div id="sophie-box">
+    <div class="sm-badge"><div class="sm-dot"></div><span>Step 2 of 2 &mdash; Your Turn</span></div>
+    <div class="sm-avatar-row">
+      <div class="sm-avatar ava">AVA</div>
+      <div class="sm-arrow">&#8594;</div>
+      <div class="sm-avatar sophie">SO</div>
+    </div>
+    <h2>Great job! Now meet<br><span>Sophie &#8212; your closer.</span></h2>
+    <p class="sm-sub">Ava captured the lead. Now Sophie shows how AI <strong style="color:var(--white)">sells, handles objections, and books the call</strong> &#8212; all on its own, 24/7.</p>
+    <button class="sm-cta" onclick="launchSophieFromModal()">&#127897;&#65039;&nbsp; Talk to Sophie Now &nbsp;&#8594;</button>
+    <button class="sm-skip" onclick="skipSophieModal()">Skip &mdash; I'll find her on the bottom-left</button>
+  </div>
 </div>
+
+<!-- BANNER -->
 <div id="demo-banner">
   <div class="banner-left">
     <div class="pulse"></div>
@@ -97,10 +127,14 @@
     <div class="step-pill" id="step3">&#9314; Book a Call</div>
   </div>
 </div>
+
+<!-- SITE IFRAME -->
 <div id="site-wrapper">
   <iframe id="demo-iframe" src="REG_TARGET_URL" scrolling="yes" sandbox="allow-scripts allow-same-origin" loading="eager"></iframe>
   <div id="link-blocker"></div>
 </div>
+
+<!-- AVA DOCK -->
 <div id="ava-dock">
   <div id="ava-bubble">
     <div class="ava-header">
@@ -112,22 +146,27 @@
     </div>
     <div class="ava-msg">&#128075; Hi! I'm Ava &#8212; the AI assistant that would live on this website.<br><br>Talk to me like you're a customer with an urgent need. See exactly how I'd handle your leads.</div>
     <button class="ava-cta" onclick="launchAva()">&#127897;&#65039; Start the Voice Demo</button>
-    <button id="ava-next-btn" onclick="showSophie()">&#127897;&#65039; Done talking? Meet Sophie &#8594;</button>
+    <button id="ava-next-btn" onclick="showSophieModal()">&#127897;&#65039; Done talking? Meet Sophie &#8594;</button>
   </div>
   <div id="ava-widget-wrap"></div>
 </div>
+
+<!-- SOPHIE DOCK -->
 <div id="sophie-dock">
   <div id="sophie-widget-wrap"></div>
 </div>
+
 <script>
   let avaLaunched = false;
   let sophieShown = false;
+
   function dismissIntro() {
     const overlay = document.getElementById('intro-overlay');
     overlay.style.opacity = '0';
     overlay.style.transition = 'opacity 0.3s';
     setTimeout(() => overlay.style.display = 'none', 300);
   }
+
   function launchAva() {
     if (avaLaunched) return;
     avaLaunched = true;
@@ -145,15 +184,33 @@
     setTimeout(() => {
       document.getElementById('ava-next-btn').style.display = 'block';
     }, 15000);
-    setTimeout(showSophie, 120000);
+    setTimeout(showSophieModal, 120000);
     window.addEventListener('message', function(e) {
-      if (e.data && (e.data.type === 'widget-closed' || e.data.action === 'close')) { showSophie(); }
+      if (e.data && (e.data.type === 'widget-closed' || e.data.action === 'close')) {
+        showSophieModal();
+      }
     });
   }
-  function showSophie() {
+
+  function showSophieModal() {
+    if (sophieShown) return;
+    document.getElementById('ava-next-btn').style.display = 'none';
+    document.getElementById('sophie-modal').classList.add('show');
+  }
+
+  function launchSophieFromModal() {
+    document.getElementById('sophie-modal').classList.remove('show');
+    activateSophie();
+  }
+
+  function skipSophieModal() {
+    document.getElementById('sophie-modal').classList.remove('show');
+    activateSophie();
+  }
+
+  function activateSophie() {
     if (sophieShown) return;
     sophieShown = true;
-    document.getElementById('ava-next-btn').style.display = 'none';
     const sophieDock = document.getElementById('sophie-dock');
     sophieDock.style.display = 'flex';
     const mWrap = document.getElementById('sophie-widget-wrap');
@@ -165,10 +222,6 @@
     document.getElementById('step2').classList.add('done');
     document.getElementById('step2').classList.remove('active');
     document.getElementById('step3').classList.add('active');
-    document.getElementById('step-overlay').style.display = 'block';
-  }
-  function dismissStepOverlay() {
-    document.getElementById('step-overlay').style.display = 'none';
   }
 </script>
 </body>
